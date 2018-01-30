@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script lang="javascript" src="js/jquery-3.1.0.min.js"></script>
+	<script lang="javascript" src="js/d3.min.js"></script>
+	<style>
+		html, body {
+			padding: 0;
+			margin: 0;
+		}
+	</style>
+</head>
+<body>
+	
+	<script>
+		var dimension = 500;
+
+		var svg = d3.select('body').append('svg')
+			.attr('width', dimension)
+			.attr('height', dimension)
+			.style('background-color', 'black');
+
+		// YOUR CODE SHOULD START HERE
+		/*
+		 * Name: Olivia MacDougal
+		 * Word: TURBULENCE
+		 */
+
+		//////// BACKGROUND GRADIENT ////////
+		var defs = svg.append("defs");
+
+		var linearGradient = defs.append("linearGradient")
+		    .attr("id", "linear-gradient")
+		    .attr("x1", "100%")
+		    .attr("y1", "-15%")
+		    .attr("x2", "-15%")
+		    .attr("y2", "100%");
+
+		linearGradient.append("stop") 
+		    .attr("offset", "0%")   
+		    .attr("stop-color", "#f2f8fd"); 
+
+		linearGradient.append("stop") 
+		    .attr("offset", "100%")   
+		    .attr("stop-color", "#7ec0ee"); //sky blue
+
+		svg.append("rect")
+			.attr("width", dimension)
+			.attr("height", dimension)
+			.style("fill", "url(#linear-gradient)");
+
+
+		//////// PLANE ////////
+
+		var plane = svg.append("svg:image")
+    			   .attr("xlink:href", "plane.png")
+    			   .attr("width", dimension * 0.3)
+    			   .attr("height", dimension * 0.15)
+    			   .attr("x", dimension/3)
+				   .attr("y", dimension/3);
+
+		svg.on("click", function() {
+			var y = parseInt(plane.attr("y"));
+			var new_y = y - (y * 0.15);
+			plane
+	        	.transition()
+		        .duration(600)
+		        .attr('y', new_y)
+		        .transition()
+		        .duration(600)
+		        .attr('y', dimension/2.5)
+		        .on("end", fly);
+		});
+	    
+	    fly();
+	 
+	    function fly() {
+	    	var y = parseInt(plane.attr("y"));
+			var new_y = y - (y * 0.03);
+			plane
+		        .attr('y', dimension/2.5)      
+		        .transition()        
+		        .duration(500)      
+		        .attr('y', new_y)
+		        .transition()
+		        .duration(500)
+		        .attr('y', dimension/2.5)
+		        .on("end", fly);
+	    };
+
+		//////// CLOUDS ////////
+		var g1 = svg.append('g');
+		var g2 = svg.append('g');
+		var g3 = svg.append('g');
+
+		// cloud 1
+		var cloud_a = g1.append("circle")
+				.attr("id", "cloud")
+				.attr("cx", dimension/1.5)
+				.attr("cy", dimension/1.5)
+				.attr("r", dimension * 0.06)
+				.attr("fill", '#ffffff');
+
+		var cloud_b = g1.append("circle")
+				.attr("id", "cloud")
+				.attr("cx", dimension/1.3)
+				.attr("cy", dimension/1.5)
+				.attr("r", dimension * 0.08)
+				.attr("fill", '#ffffff');
+
+		var cloud_c = g1.append("circle")
+				.attr("id", "cloud")
+				.attr("cx", dimension/1.4)
+				.attr("cy", dimension/1.6)
+				.attr("r", dimension * 0.07)
+				.attr("fill", '#ffffff');
+
+		var cloud_d = g1.append("circle")
+				.attr("id", "cloud")
+				.attr("cx", dimension/1.25)
+				.attr("cy", dimension/1.55)
+				.attr("r", dimension * 0.07)
+				.attr("fill", '#ffffff');
+
+		// cloud 2
+		cloud_a = g2.append("circle")
+				.attr("id", "cloud")
+				.attr("cx", dimension/1.45)
+				.attr("cy", dimension/4.3)
+				.attr("r", dimension * 0.06)
+				.attr("fill", '#ffffff');
+
+		cloud_b = g2.append("circle")
+				.attr("id", "cloud")
+				.attr("cx", dimension/1.19)
+				.attr("cy", dimension/4.7)
+				.attr("r", dimension * 0.06)
+				.attr("fill", '#ffffff');
+
+		cloud_c = g2.append("circle")
+				.attr("id", "cloud")
+				.attr("cx", dimension/1.31)
+				.attr("cy", dimension/4.1)
+				.attr("r", dimension * 0.07)
+				.attr("fill", '#ffffff');
+
+		cloud_d = g2.append("circle")
+				.attr("id", "cloud")
+				.attr("cx", dimension/1.29)
+				.attr("cy", dimension/5.1)
+				.attr("r", dimension * 0.08)
+				.attr("fill", '#ffffff');
+
+		// cloud 3
+		cloud_a = g3.append("circle")
+				.attr("id", "cloud")
+				.attr("cx", dimension/6)
+				.attr("cy", dimension/2)
+				.attr("r", dimension * 0.05)
+				.attr("fill", '#ffffff');
+
+		cloud_b = g3.append("circle")
+				.attr("id", "cloud")
+				.attr("cx", dimension/8.5)
+				.attr("cy", dimension/2)
+				.attr("r", dimension * 0.04)
+				.attr("fill", '#ffffff');
+
+		cloud_c = g3.append("circle")
+				.attr("id", "cloud")
+				.attr("cx", dimension/7)
+				.attr("cy", dimension/2.15)
+				.attr("r", dimension * 0.03)
+				.attr("fill", '#ffffff');
+
+	    clouds ();
+
+	    function clouds() {
+    		var pos_x = -dimension - 50;
+	    	var neg_x = dimension + 50;
+    		g1.attr("transform", "translate("+ neg_x + ",0)")
+    		 .transition()
+    		 .duration(11000)
+    		 .attr("transform", "translate("+ pos_x + ",0)");
+
+			g2.attr("transform", "translate("+ neg_x + ",0)")
+			 .transition()
+			 .duration(8000)
+			 .attr("transform", "translate("+ pos_x + ",0)")
+
+			g3.attr("transform", "translate("+ neg_x + ",0)")
+			 .transition()
+			 .duration(7850)
+			 .attr("transform", "translate("+ pos_x + ",0)")
+			 .on("end", clouds);
+	    };
+
+		// YOUR CODE SHOULD END HERE
+	</script>
+</body>
+</html>
