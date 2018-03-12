@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script lang="javascript" src="js/jquery-3.1.0.min.js"></script>
+	<script lang="javascript" src="js/d3.v3.min.js"></script>
+	<script lang="javascript" src="js/d3.min.js"></script>
+	<script lang="javascript" src="js/hierarchy.js"></script>
+	<link rel="stylesheet" href="css/hierarchy.css">
+</head>
+<body>
+	<div id="hierarchy1">
+
+	</div>
+	<div id="hierarchy2">
+
+	</div>
+	<script>
+		/*
+		 * Name1: Olivia MacDougal
+		 * Treemap and Sunburst
+		 */
+
+		 // KNOWN BUG: sometimes when highlighting in the sunburst,
+		 // multiple rects will be highlighted in the treemap....
+		 // something wrong with how the treemap is getting highlighted
+
+		console.log(root);
+		
+		$("#hierarchy1").on("click", function () {
+			fade_back("path");
+			fade_back("rect");
+		});
+
+		$("#hierarchy2").on("click", function () {
+			fade_back("path");
+			fade_back("rect");
+		});
+		
+		/******   Sunburst  *******/
+		var width = $("#hierarchy1").width(),
+		    height = $("#hierarchy1").height(),
+		    radius = Math.min(width, height) / 2,
+		    color = d3.scale.category20b();
+
+		var vis = d3.select("#hierarchy1").append("svg:svg")
+		    .attr("width", width)
+		    .attr("height", height)
+		    .append("svg:g")
+		    .attr("transform", "translate(" + width / 2 + "," + height * .52 + ")");
+
+		var partition = d3.layout.partition()
+		    .sort(null)
+		    .size([2 * Math.PI, radius * radius])
+		    .value(function(d) { return 1; });
+
+		var arc = d3.svg.arc()
+		    .startAngle(function(d) { return d.x; })
+		    .endAngle(function(d) { return d.x + d.dx; })
+		    .innerRadius(function(d) { return Math.sqrt(d.y); })
+		    .outerRadius(function(d) { return Math.sqrt(d.y + d.dy); });
+
+	    var path = vis.datum(root).selectAll("path")
+	      .data(partition.nodes)
+	      .enter().append("path")
+	      .attr("display", function(d) { return d.depth ? null : "none"; }) // hide inner ring
+	      .attr("d", arc)
+	      .attr("id", function(d) { return "s" + d.name + d.depth; })
+	      .style("stroke", "#fff")
+	      .style("fill", function(d) { return color((d.children ? d : d.parent).name); })
+	      .style("opacity", 1)
+	      .style("fill-rule", "evenodd")
+	      .on("mouseover", sunburst_highlight)
+	      .each(stash);
+
+		// Stash the old values for transition.
+		function stash(d) {
+		  d.x0 = d.x;
+		  d.dx0 = d.dx;
+		}
+
+		// Interpolate the arcs in data space.
+		function arcTween(a) {
+		  var i = d3.interpolate({x: a.x0, dx: a.dx0}, a);
+		  return function(t) {
+		    var b = i(t);
+		    a.x0 = b.x;
+		    a.dx0 = b.dx;
+		    return arc(b);
+		  };
+		}
+
+		d3.select(self.frameElement).style("height", height + "px");
+				
+		/******   Treemap  *******/
+		var svg = d3.select("#hierarchy2")
+		    .append("svg")
+		    .attr("width", $("#hierarchy2").width())
+		    .attr("height", $("#hierarchy2").height());
+
+		var treemap = d3.treemap()
+		    .tile(d3.treemapResquarify)
+		    .size([width, height])
+		    .round(true)
+		    .paddingInner(1);
+
+		var tree_root = d3.hierarchy(root)
+		  .eachBefore(function(d) { d.data.id = (d.parent ? d.parent.data.id + "." : "") + d.data.name; })
+		  .sum(sumBySize)
+		  .sort(function(a, b) { return b.height - a.height || b.value - a.value; });
+
+		treemap(tree_root);
+
+		var cell = svg.selectAll("g")
+			.data(tree_root.leaves())
+			.enter().append("g")
+			.attr("transform", function(d) { return "translate(" + d.x0 + "," + d.y0 + ")"; })
+			.attr("id", function(d) { return d.data.id; });
+
+		cell.append("rect")
+		  .attr("id", function(d) { return "t" + d.data.name + d.depth; })
+		  .attr("width", function(d) { return d.x1 - d.x0; })
+		  .attr("height", function(d) { return d.y1 - d.y0; })
+		  .attr("fill", function(d) { return color((d.data.children ? d : d.parent.data).name); })
+		  .on("mouseover", treemap_highlight);
+
+		cell.append("clipPath")
+		  .attr("id", function(d) { return "clip-" + d.data.id; })
+		  .append("use")
+		  .attr("xlink:href", function(d) { return "#" + d.data.id; });
+
+		d3.selectAll("input")
+		  .data([sumBySize, sumByCount], function(d) { return d ? d.name : this.value; })
+		  .on("change", changed);
+
+		var timeout = d3.timeout(function() {
+		d3.select("input[value=\"sumByCount\"]")
+		    .property("checked", true)
+		    .dispatch("change");
+		}, 2000);
+
+		function changed(sum) {
+		timeout.stop();
+
+		treemap(tree_root.sum(sum));
+
+		cell.transition()
+		    .duration(750)
+		    .attr("transform", function(d) { return "translate(" + d.x0 + "," + d.y0 + ")"; })
+		    .select("rect")
+		    .attr("width", function(d) { return d.x1 - d.x0; })
+		    .attr("height", function(d) { return d.y1 - d.y0; });
+		}
+
+		function sumByCount(d) {
+		  return d.children ? 0 : 1;
+		}
+
+		function sumBySize(d) {
+		  return d.size;
+		}
+
+		function treemap_highlight(d) {
+			var ancestors = getAncestors(d);
+			var highlight = [];
+			var colors = [];
+
+			// Get all of the IDs and convert them to Sunburst IDs
+			for (var i = 0; i < ancestors.length; i++) {
+				var id = ancestors[i].data.name;
+				var depth = ancestors[i].depth;
+				highlight[i] = "s" + id + depth;
+			}
+			
+			// Get all colors on Sunburst and save them in colors array
+			var color1 = d3.select(this).style('fill');
+			for (var i = 0; i < highlight.length; i++) {
+				colors[i] = d3.select("path#"+ highlight[i]).style('fill');
+			}
+ 
+			// Fade everything in both treemap + sunburst
+			fade(d, "path");
+			fade(d, "rect");
+
+			// Highlight clicked rect in Treemap
+			$("rect#"+ this.id).attr('style', 'fill:' + color);
+
+			// Highlight corresponding Sunburst data + ancestors
+			for (var i = 0; i < highlight.length; i++) {
+				$("path#"+ highlight[i]).attr('style', 'stroke: rgb(255, 255, 255); fill:' + colors[i]);
+			}
+		}
+
+		function sunburst_highlight(d) {
+			var ancestors = getAncestors(d);
+			var treemap_path = [];
+
+			// Get all of the IDs and convert them to Treemap IDs
+			for (var i = 0; i < ancestors.length; i++) {
+				treemap_path[i] = ancestors[i].name;
+			}
+
+			// Get the last element -- this is the actual node
+			var last_element = treemap_path[treemap_path.length - 1];
+
+			// Fade everything in both treemap + sunburst
+			fade(d, "path");
+			fade(d, "rect");
+
+			// Highlight corresponding Treemap data + ancestors
+			$("g[id*='." + last_element +"']").each(function (i, el) {
+    			var treemap_id = document.getElementById(el.id);
+    			var inner_id = document.getElementById($(treemap_id)[0].childNodes[0].id);
+				$(inner_id).attr("style", "opacity: 1");
+   	 		});
+		}
+
+		function fade(d, selecter) {
+			var sequenceArray = getAncestors(d);
+
+			// Fade all the segments.
+			d3.selectAll(selecter)
+			  .style("opacity", 0.2);
+
+			// Then highlight only those that are an ancestor of the current segment.
+			vis.selectAll(selecter)
+			  .filter(function(node) {
+			            return (sequenceArray.indexOf(node) >= 0);
+			          })
+			  .style("opacity", 1);
+		}
+
+		function fade_back(selecter) {
+			d3.selectAll(selecter)
+			  .style("opacity", 1);
+		}
+
+		// Return array of ancestors of nodes, highest first, but excluding the root.
+		function getAncestors(node) {
+			var path = [];
+			var current = node;
+
+			while (current.parent) {
+			  path.unshift(current);
+			  current = current.parent;
+			}
+			return path;
+		}
+
+	</script>
+</body>
+</head>
+</html>
