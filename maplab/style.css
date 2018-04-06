@@ -1,0 +1,76 @@
+body {
+  font-family: Arial;
+}
+
+h1, h3 {
+  padding-left: 40px;
+  margin-bottom: -10px;
+}
+
+h6 {
+	padding-left: 40px;
+    margin: 0px;
+    margin-top: 10px;
+}
+
+.counties {
+  fill: none;
+}
+
+.states {
+  fill: none;
+  stroke: #000;
+  stroke-linejoin: round;
+}
+
+.q0-9 { fill:#ffffe0; }
+.q1-9 { fill:#ffe6b1; }
+.q2-9 { fill:#ffcc85; }
+.q3-9 { fill:#ffa500; }
+.q4-9 { fill:#fc7b00; }
+.q5-9 { fill:#e04200; }
+.q6-9 { fill:#d23001; }
+.q7-9 { fill:#b11102; }
+.q8-9 { fill:#8b0000; }
+
+.key-dot {
+    display: inline-block;
+    height: 10px;
+    margin-right: .5em;
+    width: 10px;
+}
+
+.legend {
+    margin-left: 45px;
+    margin-top: 45px;
+    border: 1px solid lightgray;
+    display: flex;
+    flex-direction: column;
+    height: 175px;
+    width: 115px;
+}
+
+.legend h3 {
+    margin-top: 15px;
+    margin-left: 15px;
+    margin-bottom: 15px;
+    padding: 0px;
+}
+
+.legend p {
+    margin:0;
+    margin-left: 15px;
+    padding-left: 0px;
+}
+
+.nothing { background: #ffe6b1;}
+.d0 { background: #ffcc85;}
+.d1 { background: #fc7b00;}
+.d2 { background: #e04200;}
+.d3 { background: #b11102;}
+.d4 { background: #8b0000;}
+
+.container {
+  display: flex;
+  padding-left: 40px;
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<link rel="stylesheet" href="style.css">
+
+<h1></h1><h6></h6>
+
+
+
+<h3></h3></br></br>
+<div class="container">
+<svg width="960" height="600"></svg>
+<script src="js/d3.v4.min.js"></script>
+<script src="js/topojson.v2.min.js"></script>
+<script>
+
+var title = d3.select("h1")
+    .text("United States Drought Monitor");
+var subtitle = d3.select("h3")
+    .text("The Drought Monitor summary map identifies general areas of drought and labels them by intensity. D0 signifies an abnormally dry area. D1 is the least intense and D4 the most intense level of drought. Drought is defined as a moisture deficit bad enough to have social, environmental or economic effects.");
+
+var date = d3.select("h6").
+text("Data source: http://droughtmonitor.unl.edu/CurrentMap.aspx; Data valid as of April 3, 2018")
+
+var svg = d3.select("svg"),
+    width = +svg.attr("width"),
+    height = +svg.attr("height");
+
+var rateById = d3.map();
+
+var quantize = d3.scaleQuantize()
+    .domain([0, 90])
+    .range(d3.range(9).map(function(i) { return "q" + i + "-9"; }));
+
+var projection = d3.geoAlbersUsa()
+    .scale(1280)
+    .translate([width / 2, height / 2]);
+
+var path = d3.geoPath()
+    .projection(projection);
+
+d3.queue()
+    .defer(d3.json, "js/us.json")
+    .defer(d3.tsv, "tsv/drought.tsv", function(d) { 
+      if (d.D4 > 0) {
+        rateById.set(d.FIPS, 89); 
+      }
+      else if (d.D3 > 0 ) {
+         rateById.set(d.FIPS, 74);
+      }
+      else if (d.D2 > 0) {
+        rateById.set(d.FIPS, 59);
+      } 
+      else if (d.D1 > 0) {
+        rateById.set(d.FIPS, 44);
+      }
+      else if (d.D0 > 0) {
+        rateById.set(d.FIPS, 29);
+      }
+      else if (d.Nothing > 0) {
+        rateById.set(d.FIPS, 14);
+      }
+      else {
+        rateById.set(d.FIPS, 1);
+      }
+    })
+    
+    .await(ready);
+
+function ready(error, us) {
+  if (error) throw error;
+
+  svg.append("g")
+      .attr("class", "counties")
+    .selectAll("path")
+      .data(topojson.feature(us, us.objects.counties).features)
+    .enter().append("path")
+      .attr("class", function(d) { return quantize(rateById.get(d.id)); })
+      .attr("d", path);
+
+  svg.append("path")
+      .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+      .attr("class", "states")
+      .attr("d", path);
+}
+</script>
+
+<div class="legend">
+  <h3>Key</h3>
+   <p><span class="key-dot nothing"></span>None</p>
+   <p><span class="key-dot d0"></span>D0</p>
+   <p><span class="key-dot d1"></span>D1</p>
+   <p><span class="key-dot d2"></span>D2</p>
+   <p><span class="key-dot d3"></span>D3</p>
+   <p><span class="key-dot d4"></span>D4</p>
+</div>
+
+</div>
+
