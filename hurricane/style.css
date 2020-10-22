@@ -1,0 +1,443 @@
+.q0-8 { fill:#efb19c ; }
+.q1-8 { fill:#f69578; }
+.q2-8 { fill:#fb7914; }
+.q3-8 { fill:#ee612f; }
+.q4-8 { fill:#fd0000; }
+.q5-8 { fill:#df0001; }
+.q6-8 { fill:#c30002; }
+.q7-8 { fill:#a70002; }
+.q8-8 { fill:#8b0000; }
+
+html{
+  height: 100%;
+}
+body {
+  font-family: 'Raleway', sans-serif;
+  margin: 0px;
+  height: 100%;
+}
+
+.container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h5 {
+  margin-bottom: 0px;
+  font-size: 16px;
+}
+
+#filters {
+  background-color: gainsboro;
+  border-radius: 10px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
+
+}
+#compare {
+  background-color: gainsboro;
+  border-radius: 10px 10px 0px 0px;
+  padding-left: 20px;
+  padding-right: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.help .help-text {
+    visibility: hidden;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 10px;
+    padding: 10px;
+    width: 550px;
+    left: 50%; 
+
+    /* Position the tooltip */
+    position: absolute;
+    z-index: 1;
+}
+
+.help .help-text::after {
+    content: " ";
+    position: absolute;
+    top: 100%; /* At the bottom of the tooltip */
+    left: 95%;
+    margin-left: -15px;
+    border-width: 10px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+.help-text ul {
+  font-size: 14px;
+  text-align: left;
+  margin-left: 30px;
+}
+
+.help-text ul li span {
+  color: #f50003;
+}
+
+#blankspace {
+  padding: 10px;
+}
+
+.sel-range{
+  stroke: #a70002;
+  stroke-width: 8px;
+}
+
+.states {
+  fill:#808080;
+}
+
+.state-borders {
+  fill: none;
+  stroke: #DCDCDC;
+  stroke-width: 0.5px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.map svg {
+   margin-left: -365px;
+}
+
+.map {
+  overflow: hidden;
+}
+
+.category-meaning:hover {
+  
+}
+
+#tooltip {
+  position: absolute;
+  pointer-events: none;
+  border: 4px solid gainsboro;
+  padding: 5px;
+  border-radius: 10px;
+}
+
+#tooltip.hidden {
+  display: none;
+}
+
+#tooltip p {
+  margin: 0;
+  font-family: Futura;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.name-text {
+  font-size: 12px;
+}
+
+/* Piechart */
+.chart {
+  position: absolute;
+  display: flex;
+  border:4px solid gainsboro;
+  border-radius: 0px 0px 10px 10px;
+  /*visibility: hidden;*/
+  display: none;
+}
+
+.landing-page {
+
+    background-image: url("hurricane_gif3.gif");
+
+    /* Full height */
+    height: 100%; 
+
+    /* Center and scale the image nicely */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    /*margin-bottom: 100px;*/
+}
+
+
+.mask {
+    display: flex;
+    flex-direction: column;
+    color: #fff;
+    font-family: 'Raleway', sans-serif;
+    background-color: rgba(0,0,0,.2);
+    left: 0;
+    height: 100%;
+    width: 100%;
+    top: 0;
+
+}
+
+.vis-container {
+  margin-left: 30px;
+  margin-right: 30px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  height: 85%;
+}
+
+h1.vis-title {
+  font-size: 75px;
+  margin-bottom: 0px;
+}
+
+.authors {
+  font-size: 25px;
+}
+
+.landing-text {
+  font-size: 16px;
+  margin-top: 0px;
+}
+
+.landing-tagline {
+  font-size: 16px;
+}
+
+#landing-container {
+  margin-right: 40px;
+  text-align: right;
+}
+
+.vid-title {
+  width: 100%;
+  text-align: left;
+}
+
+.video-container {
+  margin-left: 50px;
+  padding-top: 5rem;
+
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 5%;
+}
+.landing-info {
+  height: 15%;
+  padding-top: 20px;
+  padding-left: 20px;
+  padding-right: 20px;
+}
+.landing-info a {
+  font-style: italic;
+  color: #a70002;
+  text-decoration: none;
+}
+.landing-info a:hover {
+  color: #efb19c;
+}
+
+.landing-head {
+  padding-top: 10px;
+  font-size: 24px;
+}
+
+# THIS is all shit for the slider
+.track,
+.track-inset,
+.track-overlay {
+  stroke-linecap: round;
+}
+
+.track {
+  stroke: #000;
+  stroke-opacity: 0.3;
+  stroke-width: 10px;
+}
+
+.track-inset {
+  stroke: #ddd;
+  stroke-width: 8px;
+}
+
+.track-overlay {
+  pointer-events: stroke;
+  stroke-width: 50px;
+  stroke: transparent;
+  cursor: crosshair;
+}
+
+.handle {
+  fill: #fff;
+  stroke: #000;
+  stroke-opacity: 0.5;
+  stroke-width: 1.25px;
+}   
+
+.slider {
+  font-size: 14px;
+}
+
+.small-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  margin-right: 30px;
+  margin-top:56px;
+}
+
+#apply_filters {
+  margin-bottom: 14px;
+}
+
+
+/* CHECKBOXES */
+.ck {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 16px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.ck input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 20px;
+  width: 20px;
+  background-color: #eee;
+}
+
+.ck:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+.ck input:checked ~ .checkmark {
+  background-color: #333;
+}
+
+.ck input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.ck .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.checkboxes {
+  display: flex;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+}
+
+.column li {
+  flex: 1 30px;
+  width: 100px;
+}
+
+.filter_btn:focus {outline:0;}
+
+.filter_btn:hover {opacity: 0.75}
+
+.filter_btn {
+  font-family: 'Raleway', sans-serif;
+  padding: 12px 18px;
+  border: none;
+  background: #333;
+  color: #f2f2f2;
+  text-transform: uppercase;
+  letter-spacing: .2em;
+  border-radius: 2px;
+}
+
+#filters h3 {
+  text-transform: uppercase;
+    letter-spacing: .2em;
+    font-size: 24px;
+}
+
+#compare h3 span {
+  text-transform: uppercase;
+    letter-spacing: .2em;
+    font-size: 24px;
+}
+
+#scroll-btn a:hover {
+  opacity: .5;
+}
+
+#scroll-btn a {
+  padding-top: 60px;
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  z-index: 2;
+  display: inline-block;
+  -webkit-transform: translate(0, -50%);
+  transform: translate(0, -50%);
+  color: #fff;
+  font : normal 400 20px/1 'Josefin Sans', sans-serif;
+  letter-spacing: .1em;
+  text-decoration: none;
+  transition: opacity .3s;
+}
+
+#scroll-btn a span {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  margin-left: -12px;
+  border-left: 3px solid #fff;
+  border-bottom: 3px solid #fff;
+  -webkit-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  box-sizing: border-box;
+}
